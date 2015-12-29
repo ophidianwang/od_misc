@@ -55,7 +55,7 @@ class FieldIter(FileIter):
         elif file_type=="json":
             self.iter_field = field
         else:
-            raise AttributeError("file_type should be csv/tsv/json, given" + str(file_type))
+            raise AttributeError("file_type should be csv/tsv/json, given " + str(file_type))
             
     def __next__(self):
         """
