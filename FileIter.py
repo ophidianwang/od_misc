@@ -44,7 +44,7 @@ class FieldIter(FileIter):
         specify type of the input file
         if it's a csv or tsv, the first line supposed to be header
         """
-        super(FieldIter,self).__init__(file_path, limit)
+        super().__init__(file_path, limit)
         self.file_type = file_type
         if file_type=="csv":
             header = self.file.readline().strip().split(",")
@@ -61,7 +61,7 @@ class FieldIter(FileIter):
         """
         return the specified field
         """
-        line = super(FieldIter,self).__next__()
+        line = super().__next__()
         if self.file_type == "csv":
             fields = line.split(",")
         elif self.file_type == "tsv":
@@ -71,7 +71,7 @@ class FieldIter(FileIter):
         return fields[self.iter_field]
     
 
-class MultiFieldIter(FileIter):
+class FieldsIter(FileIter):
     """
     an iterable object on several specified fields in a file (csv, tsv, json per line)
     """
@@ -80,3 +80,40 @@ class MultiFieldIter(FileIter):
         specify type of the input file
         if it's a csv or tsv, the first line supposed to be header
         """
+        super().__init__(file_path, limit)
+        self.file_type = file_type
+        self.iter_fields = []
+        
+        if file_type=="csv":
+            header = self.file.readline().strip().split(",")
+            for field in fields:
+                index = header.index(field)
+                if index!=-1:
+                    self.iter_fields.append(  )
+        elif file_type=="tsv":
+            header = self.file.readline().strip().split("\t")
+            for field in fields:
+                index = header.index(field)
+                if index!=-1:
+                    self.iter_fields.append(  )
+        elif file_type=="json":
+            self.iter_fields = fields
+        else:
+            raise AttributeError("file_type should be csv/tsv/json, given " + str(file_type))
+            
+    def __next__(self):
+        """
+        return several specified field
+        """
+        line = super().__next__()
+        if self.file_type == "csv":
+            fields = line.split(",")
+        elif self.file_type == "tsv":
+            fields = line.split("\t")
+        elif self.file_type == "json":
+            fields = json.loads(line)
+        return_fields = []
+        for index in self.iter_fields:
+            return_fields.append( fields[index] )
+        return return_fields
+        
